@@ -52,4 +52,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchView" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/nuevaNota"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margen_grande"
+        android:layout_marginBottom="@dimen/margen_grande"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/ic_agregar"
+        app:backgroundTint="?attr/colorSecondaryVariant"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
