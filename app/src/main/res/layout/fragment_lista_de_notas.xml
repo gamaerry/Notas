@@ -45,6 +45,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
+        tools:listitem="@layout/item_nota"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/margen_grande"
         app:layout_constraintBottom_toBottomOf="parent"
