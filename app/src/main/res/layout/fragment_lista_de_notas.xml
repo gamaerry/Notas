@@ -44,6 +44,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/listaRecyclerView"
         android:layout_width="match_parent"
         tools:listitem="@layout/item_nota"
         android:layout_height="0dp"
