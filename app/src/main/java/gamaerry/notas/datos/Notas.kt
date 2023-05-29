@@ -2,7 +2,7 @@ package gamaerry.notas.datos
 
 import gamaerry.notas.R
 
-fun getNotas() = listOf(
+fun getListaDeNotas() = listOf(
     Nota(
         titulo = "Título 1",
         contenido = "Contenido de nota numero 1"
