@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
 class RepositorioDeNotas {
-    fun getFlujoDeNotas(): Flow<List<Nota>> = flow {
+    fun getFlujoDeListaDeNotas(): Flow<List<Nota>> = flow {
         emit(getNotas())
     }.catch { it.printStackTrace() }
 }
