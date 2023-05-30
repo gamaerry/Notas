@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import gamaerry.notas.R
 import gamaerry.notas.adaptadores.ListaDeNotasAdapter
 import gamaerry.notas.databinding.FragmentListaDeNotasBinding
 import gamaerry.notas.viewmodels.ListaDeNotasViewModel
@@ -22,7 +23,8 @@ class ListaDeNotasFragment : Fragment() {
     private var _binding: FragmentListaDeNotasBinding? = null
     private val binding get() = _binding!!
     private val listaDeNotasViewModel: ListaDeNotasViewModel by viewModels()
-    @Inject lateinit var listaDeNotasAdapter: ListaDeNotasAdapter
+    @Inject
+    lateinit var listaDeNotasAdapter: ListaDeNotasAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,13 +37,20 @@ class ListaDeNotasFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.nuevaNota.setOnClickListener {
+            requireActivity().supportFragmentManager.beginTransaction().apply {
+                replace(R.id.contenedorPrincipal, DetalleDeNotaFragment())
+                addToBackStack("detallesProfesionales")
+                commit()
+            }
+        }
         binding.listaRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = listaDeNotasAdapter
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                listaDeNotasViewModel.listaDeNotas.collect{ listaDeNotasAdapter.submitList(it) }
+                listaDeNotasViewModel.listaDeNotas.collect { listaDeNotasAdapter.submitList(it) }
             }
         }
     }
