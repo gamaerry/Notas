@@ -11,10 +11,4 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ModuloPrincipal {
-    @Provides
-    @Singleton
-    fun proveerListaDeNotasAdapter() = ListaDeNotasAdapter()
-    @Provides
-    @Singleton
-    fun proveerRepositorioDeNotas() = RepositorioDeNotas()
 }

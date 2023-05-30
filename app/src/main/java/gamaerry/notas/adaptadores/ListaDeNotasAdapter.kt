@@ -11,8 +11,13 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import gamaerry.notas.databinding.ItemNotaBinding
 import gamaerry.notas.datos.Nota
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ListaDeNotasAdapter :
+@Singleton
+class ListaDeNotasAdapter
+@Inject
+constructor() :
     ListAdapter<Nota, ListaDeNotasAdapter.ItemNotaViewHolder>(NotaDiffUtil) {
     private var accionAlHacerClic: ((String) -> Unit)? = null
 
