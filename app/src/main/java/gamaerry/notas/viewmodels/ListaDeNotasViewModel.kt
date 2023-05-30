@@ -24,7 +24,7 @@ constructor(
         getNotas()
     }
 
-    fun getNotas() {
+    private fun getNotas() {
         repositorio.getFlujoDeListaDeNotas().onEach {
             _listaDeNotas.value = it
         }.launchIn(viewModelScope)

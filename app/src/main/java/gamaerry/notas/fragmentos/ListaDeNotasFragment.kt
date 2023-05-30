@@ -26,15 +26,6 @@ class ListaDeNotasFragment : Fragment() {
     @Inject
     lateinit var listaDeNotasAdapter: ListaDeNotasAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentListaDeNotasBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.nuevaNota.setOnClickListener {
@@ -46,7 +37,7 @@ class ListaDeNotasFragment : Fragment() {
                     R.anim.salir_hacia_derecha
                 )
                 replace(R.id.contenedorPrincipal, DetalleDeNotaFragment())
-                addToBackStack("detallesProfesionales")
+                addToBackStack("detalleNuevaNota")
                 commit()
             }
         }
@@ -59,6 +50,15 @@ class ListaDeNotasFragment : Fragment() {
                 listaDeNotasViewModel.listaDeNotas.collect { listaDeNotasAdapter.submitList(it) }
             }
         }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentListaDeNotasBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onDestroyView() {
