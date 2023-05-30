@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import gamaerry.notas.R
 import gamaerry.notas.databinding.ItemNotaBinding
 import gamaerry.notas.datos.Nota
 import javax.inject.Inject
@@ -60,10 +61,10 @@ constructor() :
             fondoNotas.color = AppCompatResources.getColorStateList(itemView.context, nota.color)
             notaActual = nota
 
-            if (nota.color == android.R.color.background_light)
+            if (nota.color == R.color.blanco)
                 fondoNotas.setStroke(
                     2,
-                    ContextCompat.getColor(itemView.context, android.R.color.background_dark)
+                    ContextCompat.getColor(itemView.context, R.color.negro)
                 )
             else
                 fondoNotas.setStroke(2, ContextCompat.getColor(itemView.context, nota.color))
