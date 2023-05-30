@@ -39,6 +39,12 @@ class ListaDeNotasFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.nuevaNota.setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction().apply {
+                setCustomAnimations(
+                    R.anim.entrar_desde_derecha,
+                    R.anim.salir_hacia_izquierda,
+                    R.anim.entrar_desde_izquierda,
+                    R.anim.salir_hacia_derecha
+                )
                 replace(R.id.contenedorPrincipal, DetalleDeNotaFragment())
                 addToBackStack("detallesProfesionales")
                 commit()
