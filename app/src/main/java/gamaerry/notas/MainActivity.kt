@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import dagger.hilt.android.AndroidEntryPoint
 import gamaerry.notas.databinding.ActivityMainBinding
-import gamaerry.notas.fragmentos.ListaDeNotasFragment
+import gamaerry.notas.fragmentos.lista.ListaDeNotasFragment
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
