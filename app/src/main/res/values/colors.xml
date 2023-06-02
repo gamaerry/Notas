@@ -2,8 +2,15 @@
 <resources>
     <color name="negro">#FF000000</color>
     <color name="blanco">#FFFFFFFF</color>
-    <color name="naranja">#FF5722</color>
-    <color name="amarillo">#FFEB3B</color>
-    <color name="verde">#4CAF50</color>
-    <color name="morado">#673AB7</color>
+    <color name="rojo">#FAD2E1</color>
+    <color name="rosa">#FBD9FB</color>
+    <color name="naranja1">#FFD6A5</color>
+    <color name="naranja2">#FAEDCB</color>
+    <color name="amarillo">#FDFFB6</color>
+    <color name="verde1">#CAFFBF</color>
+    <color name="verde2">#C9E4DE</color>
+    <color name="verde3">#B4F5FB</color>
+    <color name="azul1">#D1EAFF</color>
+    <color name="azul2">#AFE1FB</color>
+    <color name="morado">#E0DAFF</color>
 </resources>
