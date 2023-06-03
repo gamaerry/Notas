@@ -17,6 +17,7 @@ object ModuloPrincipal {
     @Singleton
     fun proveerSelectorDeColorAdapter() = SelectorDeColorAdapter(
         listOf(
+            R.color.blanco,
             R.color.rojo,
             R.color.rosa,
             R.color.naranja1,

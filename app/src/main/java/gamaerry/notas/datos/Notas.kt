@@ -10,7 +10,7 @@ fun getListaDeNotas() = listOf(
     Nota(
         titulo = "Título 2",
         contenido = "Contenido de nota numero 2.\n\n1\n2\n3",
-        color = R.color.naranja
+        color = R.color.naranja1
     ),
     Nota(
         titulo = "Título 3",
@@ -20,7 +20,7 @@ fun getListaDeNotas() = listOf(
     Nota(
         titulo = "Título 4",
         contenido = "Contenido de nota numero 4",
-        color = R.color.verde
+        color = R.color.verde1
     ),
     Nota(
         titulo = "El enamorado y la muerte",
