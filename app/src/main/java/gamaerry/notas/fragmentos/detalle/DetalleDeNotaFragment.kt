@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -38,7 +40,27 @@ class DetalleDeNotaFragment : Fragment() {
                 }
             }
         }
+        binding.atras.setOnClickListener { guardar() }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() = guardar()
+            }
+        )
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                detalleDeNotaViewModel.laNotaSeHaModificado.collect{
+                    if(it) requireActivity().supportFragmentManager.popBackStack()
+                }
+            }
+        }
+    }
 
+    private fun guardar() {
+        detalleDeNotaViewModel.guardarCambios(
+            binding.tituloNota.text.toString(),
+            binding.contenidoNota.text.toString()
+        )
     }
 
     override fun onCreateView(
