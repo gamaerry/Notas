@@ -31,6 +31,8 @@ class ListaDeNotasFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().window.cambiarColorDelStatusBar(R.color.principal)
+        listaDeNotasViewModel.getNotas()
         binding.nuevaNota.setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction().apply {
                 setCustomAnimations(
@@ -53,11 +55,6 @@ class ListaDeNotasFragment : Fragment() {
                 listaDeNotasViewModel.listaDeNotas.collect { listaDeNotasAdapter.submitList(it) }
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        requireActivity().window.cambiarColorDelStatusBar(R.color.principal)
     }
 
     override fun onCreateView(
