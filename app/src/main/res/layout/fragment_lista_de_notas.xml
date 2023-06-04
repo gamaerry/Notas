@@ -63,5 +63,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:src="@drawable/ic_agregar"
-        app:backgroundTint="?attr/colorSecondaryVariant"/>
+        app:backgroundTint="@color/principal"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,6 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
+import gamaerry.notas.cambiarColorDelStatusBar
 import gamaerry.notas.databinding.FragmentDetalleDeNotaBinding
 import gamaerry.notas.mostrarTeclado
 import gamaerry.notas.viewmodels.DetalleDeNotaViewModel
@@ -35,6 +36,7 @@ class DetalleDeNotaFragment : Fragment() {
                     binding.parentDetalleDeNota.setBackgroundColor(
                         ContextCompat.getColor(requireContext(), it)
                     )
+                    requireActivity().window.cambiarColorDelStatusBar(it)
                 }
             }
         }

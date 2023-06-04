@@ -2,7 +2,10 @@ package gamaerry.notas
 
 import android.content.Context
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat
 import gamaerry.notas.modelo.Nota
 
 fun View.ocultarTeclado() {
@@ -17,6 +20,11 @@ fun View.mostrarTeclado() {
     val manejadorDelInputMethod =
         context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     manejadorDelInputMethod.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+}
+
+fun Window.cambiarColorDelStatusBar(color: Int){
+    this.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+    this.statusBarColor = ContextCompat.getColor(context, color)
 }
 
 fun getNotasEstaticas() = listOf(

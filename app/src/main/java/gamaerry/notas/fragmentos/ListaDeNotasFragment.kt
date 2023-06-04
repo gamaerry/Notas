@@ -1,6 +1,7 @@
 package gamaerry.notas.fragmentos
 
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +11,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.color.MaterialColors
 import dagger.hilt.android.AndroidEntryPoint
 import gamaerry.notas.R
 import gamaerry.notas.adaptadores.ListaDeNotasAdapter
+import gamaerry.notas.cambiarColorDelStatusBar
 import gamaerry.notas.databinding.FragmentListaDeNotasBinding
 import gamaerry.notas.viewmodels.ListaDeNotasViewModel
 import kotlinx.coroutines.launch
@@ -50,6 +53,11 @@ class ListaDeNotasFragment : Fragment() {
                 listaDeNotasViewModel.listaDeNotas.collect { listaDeNotasAdapter.submitList(it) }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().window.cambiarColorDelStatusBar(R.color.principal)
     }
 
     override fun onCreateView(
