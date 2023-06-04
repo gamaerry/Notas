@@ -1,6 +1,6 @@
 package gamaerry.notas.datos
 
-import gamaerry.notas.getNotasEstaticas
+import gamaerry.notas.getNotaEstatica
 import gamaerry.notas.modelo.Nota
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -17,7 +17,9 @@ constructor(private val daoPrincipal: DaoPrincipal) {
         emit(true)
     }.catch { it.printStackTrace() }
 
-    fun getFlujoDeListaDeNotas(): Flow<List<Nota>> = flow {
-        emit(getNotasEstaticas())
+    fun getListaDeNotas(
+        query: String
+    ): Flow<List<Nota>> = flow {
+        emit(listOf(getNotaEstatica()).plus(daoPrincipal.operacionGetListaDeNotas(query)))
     }.catch { it.printStackTrace() }
 }

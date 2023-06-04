@@ -25,11 +25,9 @@ fun ConstraintLayout.cambiarColorDelBackground(color: Int) {
     this.setBackgroundColor(ContextCompat.getColor(context, color))
 }
 
-fun getNotasEstaticas() = listOf(
-    Nota(
-        titulo = "Nota de bienvenida",
-        contenido = "Bienvenido(a) a esta aplicación de notas totalmente add-free, ¡que la disfrutes! <3\n\nAtentamente, el desarrollador."
-    )
+fun getNotaEstatica() = Nota(
+    titulo = "Nota de bienvenida",
+    contenido = "Bienvenido(a) a esta aplicación de notas totalmente add-free, ¡que la disfrutes! <3\n\nAtentamente, el desarrollador."
 )
 
 fun getColores() = listOf(
