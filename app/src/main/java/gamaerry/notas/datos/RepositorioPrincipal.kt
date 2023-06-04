@@ -9,7 +9,12 @@ import javax.inject.Singleton
 @Singleton
 class RepositorioPrincipal
 @Inject
-constructor(){
+constructor(private val daoPrincipal: DaoPrincipal) {
+    fun insertarNota(nota: Nota): Flow<Boolean> = flow {
+        daoPrincipal.operacionInsertarNota(nota)
+        emit(true)
+    }.catch { it.printStackTrace() }
+
     fun getFlujoDeListaDeNotas(): Flow<List<Nota>> = flow {
         emit(getListaDeNotas())
     }.catch { it.printStackTrace() }
