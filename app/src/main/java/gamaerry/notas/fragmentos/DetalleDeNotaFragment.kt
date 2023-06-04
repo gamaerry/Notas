@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
+import gamaerry.notas.cambiarColorDelBackground
 import gamaerry.notas.cambiarColorDelStatusBar
 import gamaerry.notas.databinding.FragmentDetalleDeNotaBinding
 import gamaerry.notas.mostrarTeclado
@@ -33,9 +33,7 @@ class DetalleDeNotaFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 detalleDeNotaViewModel.colorSeleccionado.collect {
-                    binding.parentDetalleDeNota.setBackgroundColor(
-                        ContextCompat.getColor(requireContext(), it)
-                    )
+                    binding.parentDetalleDeNota.cambiarColorDelBackground(it)
                     requireActivity().window.cambiarColorDelStatusBar(it)
                 }
             }
