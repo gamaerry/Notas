@@ -1,4 +1,4 @@
-package gamaerry.notas.fragmentos.lista
+package gamaerry.notas.fragmentos
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,7 +14,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import gamaerry.notas.R
 import gamaerry.notas.adaptadores.ListaDeNotasAdapter
 import gamaerry.notas.databinding.FragmentListaDeNotasBinding
-import gamaerry.notas.fragmentos.detalle.DetalleDeNotaFragment
 import gamaerry.notas.viewmodels.ListaDeNotasViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

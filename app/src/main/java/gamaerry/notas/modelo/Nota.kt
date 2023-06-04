@@ -1,4 +1,4 @@
-package gamaerry.notas.datos
+package gamaerry.notas.modelo
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

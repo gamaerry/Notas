@@ -1,4 +1,4 @@
-package gamaerry.notas.fragmentos.detalle
+package gamaerry.notas.fragmentos
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import gamaerry.notas.R
 import gamaerry.notas.databinding.ItemNotaBinding
-import gamaerry.notas.datos.Nota
+import gamaerry.notas.modelo.Nota
 import javax.inject.Inject
 import javax.inject.Singleton
 

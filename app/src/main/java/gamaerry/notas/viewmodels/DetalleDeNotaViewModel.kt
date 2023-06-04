@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gamaerry.notas.R
-import gamaerry.notas.datos.Nota
+import gamaerry.notas.modelo.Nota
 import gamaerry.notas.datos.RepositorioPrincipal
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
