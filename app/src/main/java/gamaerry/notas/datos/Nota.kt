@@ -1,8 +1,13 @@
 package gamaerry.notas.datos
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import gamaerry.notas.R
 import java.util.UUID
 
+@Entity
 data class Nota (
+    @PrimaryKey(autoGenerate = false)
     val id: String = UUID.randomUUID().toString(),
     val titulo: String,
     val contenido: String,
