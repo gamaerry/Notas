@@ -15,6 +15,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         if (savedInstanceState == null)
             supportFragmentManager.beginTransaction()
-                .add(R.id.contenedorPrincipal, ListaDeNotasFragment()).addToBackStack("listaDeNotas").commit()
+                .add(R.id.contenedorPrincipal, ListaDeNotasFragment()).commit()
     }
 }
