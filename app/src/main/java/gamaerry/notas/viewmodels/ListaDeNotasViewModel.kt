@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gamaerry.notas.datos.Nota
-import gamaerry.notas.datos.RepositorioDeNotas
+import gamaerry.notas.datos.RepositorioPrincipal
 import gamaerry.notas.datos.getListaDeNotas
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +16,7 @@ import javax.inject.Inject
 class ListaDeNotasViewModel
 @Inject
 constructor(
-    private val repositorio: RepositorioDeNotas
+    private val repositorio: RepositorioPrincipal
 ) : ViewModel() {
 //    private var _listaDeNotas = MutableStateFlow<List<Nota>>(emptyList())
     private var _listaDeNotas = MutableStateFlow(getListaDeNotas()) //es posible pasar directamente la lista de notas

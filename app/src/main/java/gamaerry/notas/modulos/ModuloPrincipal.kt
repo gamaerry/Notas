@@ -5,9 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import gamaerry.notas.R
-import gamaerry.notas.adaptadores.ListaDeNotasAdapter
 import gamaerry.notas.adaptadores.SelectorDeColorAdapter
-import gamaerry.notas.datos.RepositorioDeNotas
 import javax.inject.Singleton
 
 @Module

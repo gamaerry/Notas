@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 
 @Database(entities = [Nota::class], version = 1)
 abstract class BaseDeDatosPrincipal: RoomDatabase(){
-    abstract fun getNotaDao(): NotaDao
+    abstract fun getNotaDao(): DaoPrincipal
     companion object {
         const val NOMBRE_BASE_DE_DATOS = "notas"
     }

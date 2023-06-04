@@ -7,7 +7,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class RepositorioDeNotas
+class RepositorioPrincipal
 @Inject
 constructor(){
     fun getFlujoDeListaDeNotas(): Flow<List<Nota>> = flow {
