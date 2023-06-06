@@ -14,13 +14,15 @@ import javax.inject.Inject
 @HiltViewModel
 class ListaDeNotasViewModel
 @Inject
-constructor(
-    private val repositorio: RepositorioPrincipal
-) : ViewModel() {
+constructor(private val repositorio: RepositorioPrincipal) : ViewModel() {
+    // aqui es donde se almacena la listaDeNotas
     private var _listaDeNotas = MutableStateFlow<List<Nota>>(emptyList())
     val listaDeNotas: StateFlow<List<Nota>> get() = _listaDeNotas
+
+    // representa el filtrado de busqueda
     private val busquedaQuery = MutableStateFlow("")
 
+    // obtiene las notas del repositorio de acuerdo a la busqueda
     fun getNotas() = repositorio.getListaDeNotas(busquedaQuery.value).onEach {
         _listaDeNotas.value = it
     }.launchIn(viewModelScope)

@@ -9,6 +9,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import gamaerry.notas.modelo.Nota
 
+// mostrarTeclado() se usa cuando el usuario abre una nota (ya sea para modificar o para crear)
 fun View.mostrarTeclado() {
     this.requestFocus()
     val manejadorDelInputMethod =
@@ -16,6 +17,8 @@ fun View.mostrarTeclado() {
     manejadorDelInputMethod.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
 }
 
+// esta junto con cambiarColorDelBackground() extienden a sus clases correspondientes
+// para hacer un cambio de color cuando asi se requiera por el usuario
 fun Window.cambiarColorDelStatusBar(color: Int) {
     this.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
     this.statusBarColor = ContextCompat.getColor(context, color)
@@ -25,11 +28,15 @@ fun ConstraintLayout.cambiarColorDelBackground(color: Int) {
     this.setBackgroundColor(ContextCompat.getColor(context, color))
 }
 
+// nota estatica que se agrega a la lista de las notas de la base
+// de datos (probablemente borrada para la version de lanzamiento)
 fun getNotaEstatica() = Nota(
     titulo = "Nota de bienvenida",
     contenido = "Bienvenido(a) a esta aplicación de notas totalmente add-free, ¡que la disfrutes! <3\n\nAtentamente, el desarrollador."
 )
 
+// toma y regresa los colores definidos en colors.xml
+// que terminara usando el SelectorDeColorFragment()
 fun getColores() = listOf(
     R.color.blanco,
     R.color.rojo,

@@ -20,16 +20,27 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DetalleDeNotaFragment : Fragment() {
+    // los binding enlazan las vistas con el codigo
     private var _binding: FragmentDetalleDeNotaBinding? = null
     private val binding get() = _binding!!
+
+    // con by activityViewModels() uso la implementacion que me
+    // permite usar este objeto dentro del alcance de la actividad
     private val detalleDeNotaViewModel: DetalleDeNotaViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // cada vez que entra este fragment se muestra el teclado
         binding.contenidoNota.mostrarTeclado()
+
+        // aqui no se necesita ningún FragmentTransaction para mostrar el
+        // SelectorDeColorFragment, solo se requiere esta sola linea de codigo
         binding.colorDeNota.setOnClickListener {
             SelectorDeColorFragment().show(requireActivity().supportFragmentManager, "selector")
         }
+
+        // cada vez que entra este fragment es necesario actualizar los colores
+        // del StatusBar y del Background (color almacenado en el viewModel)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 detalleDeNotaViewModel.colorSeleccionado.collect {
@@ -38,18 +49,29 @@ class DetalleDeNotaFragment : Fragment() {
                 }
             }
         }
-        binding.atras.setOnClickListener { guardar() }
-        requireActivity().onBackPressedDispatcher.addCallback { guardar() }
+
+        // unicamente en este fragment la accion de back (retroceder)
+        // se sobreescribe para guardar la nota (funcion presente en el viewModel
+        // y que depende de su objeto repositorio para hacerlo) y para
+        // regresar al fragmento anterior (ListaDeNotasFragment en este caso)
+        binding.atras.setOnClickListener { retroceder() }
+        requireActivity().onBackPressedDispatcher.addCallback { retroceder() }
     }
 
-    private fun guardar() {
-        detalleDeNotaViewModel.guardarCambios(
+    private fun retroceder() {
+        // esta funcion no requiere del color porque el SelectorDeColorFragment
+        // es quien se encarga de almacenar el color seleccionado por el usuario
+        detalleDeNotaViewModel.guardarNota(
             binding.tituloNota.text.toString(),
             binding.contenidoNota.text.toString()
         )
+
+        //regresa al fragmento anterior
         requireActivity().supportFragmentManager.popBackStack()
     }
 
+    // se sobreescriben estos metodos unicamente para
+    // el correcto funcionamiento del nuestro binding
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

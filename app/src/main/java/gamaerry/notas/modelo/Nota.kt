@@ -5,8 +5,12 @@ import androidx.room.PrimaryKey
 import gamaerry.notas.R
 import java.util.UUID
 
+// este es el template o modelo que tomaran los objetos
+// que eventualente ira creando el usuario en la aplicacion
+// (notese que el id lo puede generar Room por nosotros,
+// pero yo he decidido hacerlo con randomUUID() de java.util)
 @Entity
-data class Nota (
+data class Nota(
     @PrimaryKey(autoGenerate = false)
     val id: String = UUID.randomUUID().toString(),
     val titulo: String,
