@@ -9,6 +9,7 @@ import gamaerry.notas.datos.RepositorioPrincipal
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,6 +23,13 @@ constructor(private val repositorio: RepositorioPrincipal) : ViewModel() {
     private val _nota = MutableStateFlow<Nota?>(null)
     val nota: StateFlow<Nota?> get() = _nota
 
+    // establece el valor de la nota dada el id que se
+    // especifica en la ListaDeNotasFragment al hacer click
+    fun setNotaPorId(id: String){
+        repositorio.getNotaPorId(id).onEach{
+            _nota.value = it
+        }.launchIn(viewModelScope)
+    }
 
     // se actualiza el color del fondo del detalle de la nota
     fun setColor(color: Int) {
