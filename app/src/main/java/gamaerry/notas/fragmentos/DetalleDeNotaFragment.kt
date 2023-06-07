@@ -60,19 +60,16 @@ class DetalleDeNotaFragment : Fragment() {
                 detalleDeNotaViewModel.nota.collect {
                     it?.let { nota ->
                         binding.tituloNota.setText(nota.titulo)
-                        binding.contenidoNota.append("${nota.contenido} ")
+                        binding.contenidoNota.setText(nota.contenido)
                         detalleDeNotaViewModel.setColor(nota.color)
                         binding.eliminar.isVisible = true
-
                         val dateFormat: SimpleDateFormat =
                             if (DateUtils.isToday(Date(nota.modificacion).time))
                                 SimpleDateFormat("hh:mm a", Locale.ROOT)
                             else
                                 SimpleDateFormat("MMM dd", Locale.ROOT)
-
                         val fechaDeEditado = "Editado ${dateFormat.format(Date(nota.modificacion))}"
                         binding.fechaDeEditado.text = fechaDeEditado
-
                     }
                 }
             }
