@@ -1,10 +1,12 @@
 package gamaerry.notas.fragmentos
 
 import android.os.Bundle
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -17,6 +19,9 @@ import gamaerry.notas.databinding.FragmentDetalleDeNotaBinding
 import gamaerry.notas.mostrarTeclado
 import gamaerry.notas.viewmodels.DetalleDeNotaViewModel
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @AndroidEntryPoint
 class DetalleDeNotaFragment : Fragment() {
@@ -46,6 +51,29 @@ class DetalleDeNotaFragment : Fragment() {
                 detalleDeNotaViewModel.colorSeleccionado.collect {
                     binding.parentDetalleDeNota.cambiarColorDelBackground(it)
                     requireActivity().window.cambiarColorDelStatusBar(it)
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                detalleDeNotaViewModel.nota.collect {
+                    it?.let { nota ->
+                        binding.tituloNota.setText(nota.titulo)
+                        binding.contenidoNota.append("${nota.contenido} ")
+                        detalleDeNotaViewModel.setColor(nota.color)
+                        binding.eliminar.isVisible = true
+
+                        val dateFormat: SimpleDateFormat =
+                            if (DateUtils.isToday(Date(nota.modificacion).time))
+                                SimpleDateFormat("hh:mm a", Locale.ROOT)
+                            else
+                                SimpleDateFormat("MMM dd", Locale.ROOT)
+
+                        val fechaDeEditado = "Editado ${dateFormat.format(Date(nota.modificacion))}"
+                        binding.fechaDeEditado.text = fechaDeEditado
+
+                    }
                 }
             }
         }
