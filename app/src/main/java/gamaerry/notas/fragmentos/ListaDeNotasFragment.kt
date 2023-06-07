@@ -68,7 +68,11 @@ class ListaDeNotasFragment : Fragment() {
         }
 
         // establecer accion para el boton de nueva nota
-        binding.nuevaNota.setOnClickListener { transicion.commit() }
+        binding.nuevaNota.setOnClickListener {
+            // esto dara un objeto Nota nulo
+            detalleDeNotaViewModel.setNotaPorId("")
+            transicion.commit()
+        }
 
         // hace la misma transicion pero con la nota seleccionada
         listaDeNotasAdapter.accionAlHacerClic = {

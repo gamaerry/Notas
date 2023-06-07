@@ -21,6 +21,6 @@ interface DaoPrincipal {
     suspend fun operacionGetListaDeNotas(palabrasClave: String): List<Nota>
 
     // busca y regresa la nota con el id especificado
-    @Query("SELECT * FROM Nota WHERE id LIKE '%' || :id || '%'")
-    suspend fun operacionGetNotaPorId(id: String): Nota
+    @Query("SELECT * FROM Nota WHERE id = :id")
+    suspend fun operacionGetNotaPorId(id: String): Nota?
 }
