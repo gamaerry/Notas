@@ -19,4 +19,8 @@ interface DaoPrincipal {
     // (en este caso que o contenido o titulo coincidan con las palabras clave pasadas)
     @Query("SELECT * FROM Nota WHERE titulo LIKE '%' || :palabrasClave || '%' OR contenido LIKE '%' || :palabrasClave || '%'")
     suspend fun operacionGetListaDeNotas(palabrasClave: String): List<Nota>
+
+    // busca y regresa la nota con el id especificado
+    @Query("SELECT * FROM Nota WHERE id LIKE '%' || :id || '%'")
+    suspend fun operacionGetNotaPorId(id: String): Nota
 }
