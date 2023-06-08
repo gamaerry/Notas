@@ -44,6 +44,12 @@ class DetalleDeNotaFragment : Fragment() {
             SelectorDeColorFragment().show(requireActivity().supportFragmentManager, "selector")
         }
 
+        binding.eliminar.setOnClickListener {
+            detalleDeNotaViewModel.borrarNota()
+            //regresa al fragmento anterior
+            requireActivity().supportFragmentManager.popBackStack()
+        }
+
         // cada vez que entra este fragment es necesario actualizar los colores
         // del StatusBar y del Background (color almacenado en el viewModel)
         viewLifecycleOwner.lifecycleScope.launch {
