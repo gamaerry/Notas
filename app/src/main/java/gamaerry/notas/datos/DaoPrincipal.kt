@@ -1,6 +1,7 @@
 package gamaerry.notas.datos
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -27,4 +28,7 @@ interface DaoPrincipal {
 
     @Update
     suspend fun operacionActualizarNota(nota: Nota)
+
+    @Delete
+    suspend fun operacionBorrarNota(nota: Nota)
 }
