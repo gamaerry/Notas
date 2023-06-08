@@ -39,4 +39,8 @@ constructor(private val daoPrincipal: DaoPrincipal) {
     fun actualizarNota(nota: Nota) = flow {
         emit(daoPrincipal.operacionActualizarNota(nota))
     }.catch { it.printStackTrace() }
+
+    fun borrarNota(nota: Nota) = flow {
+        emit(daoPrincipal.operacionBorrarNota(nota))
+    }.catch { it.printStackTrace() }
 }
