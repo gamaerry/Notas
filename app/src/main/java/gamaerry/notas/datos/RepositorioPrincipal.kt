@@ -28,7 +28,7 @@ constructor(private val daoPrincipal: DaoPrincipal) {
     // el view model que llama a esta funcion lo hace
     // mediante una especie de bloque suspendible (.onEach)
     fun getListaDeNotas(palabrasClave: String) = flow {
-        emit(listOf(getNotaEstatica()).plus(daoPrincipal.operacionGetListaDeNotas(palabrasClave)))
+        emit(daoPrincipal.operacionGetListaDeNotas(palabrasClave))
     }.catch { it.printStackTrace() }
 
     // emite el objeto Nota obtenido por el Dao dada su id

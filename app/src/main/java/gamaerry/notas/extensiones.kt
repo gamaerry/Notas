@@ -1,5 +1,6 @@
 package gamaerry.notas
 
+import android.app.Activity
 import android.content.Context
 import android.view.View
 import android.view.Window
@@ -8,6 +9,17 @@ import android.view.inputmethod.InputMethodManager
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import gamaerry.notas.modelo.Nota
+
+fun Activity.getEsPrimeraVez(): Boolean{
+    val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+    val esPrimeraVez = sharedPreferences.getBoolean("esPrimeraVez", true)
+    return if (esPrimeraVez) {
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("esPrimeraVez", false)
+        editor.apply()
+        true
+    } else false
+}
 
 // ocultarTeclado() se usa a la hora de presionar "buscar" en el fragmento principal
 fun View.ocultarTeclado() {
@@ -28,8 +40,8 @@ fun View.mostrarTeclado() {
 // esta junto con cambiarColorDelBackground() extienden a sus clases correspondientes
 // para hacer un cambio de color cuando asi se requiera por el usuario
 fun Window.cambiarColorDelStatusBar(color: Int) {
-    this.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-    this.statusBarColor = ContextCompat.getColor(context, color)
+    addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+    statusBarColor = ContextCompat.getColor(context, color)
 }
 
 fun ConstraintLayout.cambiarColorDelBackground(color: Int) {

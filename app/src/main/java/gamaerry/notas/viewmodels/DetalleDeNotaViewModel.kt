@@ -42,8 +42,10 @@ constructor(private val repositorio: RepositorioPrincipal) : ViewModel() {
     // dependiendo si ya se había creado o no
     fun guardarNota(titulo: String, contenido: String) {
         // si el valor de la nota es null significa que no se ha creado
-        if (_nota.value == null) guardarNuevaNota(titulo, contenido)
-        else guardarCambios(titulo, contenido)
+        if (_nota.value == null)
+            guardarNuevaNota(titulo, contenido)
+        else
+            guardarCambios(titulo, contenido)
     }
 
     private fun guardarCambios(titulo: String, contenido: String) {
@@ -69,6 +71,10 @@ constructor(private val repositorio: RepositorioPrincipal) : ViewModel() {
                 color = _colorSeleccionado.value
             )
         ).launchIn(viewModelScope)
+    }
+
+    fun insertarNota(nota: Nota) {
+        repositorio.insertarNota(nota).launchIn(viewModelScope)
     }
 
     fun borrarNota() {

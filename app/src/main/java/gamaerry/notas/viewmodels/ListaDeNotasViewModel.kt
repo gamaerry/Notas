@@ -27,8 +27,9 @@ constructor(private val repositorio: RepositorioPrincipal) : ViewModel() {
         _listaDeNotas.value = it
     }.launchIn(viewModelScope)
 
-    fun setBusquedaQuery(query: String){
+    fun setBusquedaQuery(query: String): Boolean{
         busquedaQuery.value = query
         getNotas()
+        return true
     }
 }

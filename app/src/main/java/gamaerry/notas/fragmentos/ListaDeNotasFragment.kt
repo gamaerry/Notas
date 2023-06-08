@@ -1,10 +1,10 @@
 package gamaerry.notas.fragmentos
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView
 import android.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -18,6 +18,8 @@ import gamaerry.notas.R
 import gamaerry.notas.adaptadores.ListaDeNotasAdapter
 import gamaerry.notas.cambiarColorDelStatusBar
 import gamaerry.notas.databinding.FragmentListaDeNotasBinding
+import gamaerry.notas.getEsPrimeraVez
+import gamaerry.notas.getNotaEstatica
 import gamaerry.notas.ocultarTeclado
 import gamaerry.notas.viewmodels.DetalleDeNotaViewModel
 import gamaerry.notas.viewmodels.ListaDeNotasViewModel
@@ -40,6 +42,9 @@ class ListaDeNotasFragment : Fragment() {
     lateinit var listaDeNotasAdapter: ListaDeNotasAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        if (requireActivity().getEsPrimeraVez())
+            detalleDeNotaViewModel.insertarNota(getNotaEstatica())
+
         super.onViewCreated(view, savedInstanceState)
         // actualizar color y notas (obtenidas estas por el viewModel)
         requireActivity().window.cambiarColorDelStatusBar(R.color.principal)
@@ -73,23 +78,22 @@ class ListaDeNotasFragment : Fragment() {
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return if (query != null){
-                    buscarEnBaseDeDatos(query)
                     binding.buscador.ocultarTeclado()
-                    true
+                    listaDeNotasViewModel.setBusquedaQuery(query)
                 } else false
             }
-
             override fun onQueryTextChange(query: String?): Boolean {
-                return if (query != null){
-                    buscarEnBaseDeDatos(query)
-                    true
-                } else false
+                return if (query != null)
+                    listaDeNotasViewModel.setBusquedaQuery(query)
+                else false
             }
         })
 
         // establecer accion para el boton de nueva nota
         binding.nuevaNota.setOnClickListener {
             // esto dara un objeto Nota nulo
+            // (notese que es set y no get por
+            // tratarse del detalleDeNotaViewModel)
             detalleDeNotaViewModel.setNotaPorId("")
             transicion.commit()
         }
@@ -111,10 +115,6 @@ class ListaDeNotasFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = listaDeNotasAdapter
         }
-    }
-
-    private fun buscarEnBaseDeDatos(query: String) {
-        listaDeNotasViewModel.setBusquedaQuery(query)
     }
 
     // se sobreescriben estos metodos unicamente para
