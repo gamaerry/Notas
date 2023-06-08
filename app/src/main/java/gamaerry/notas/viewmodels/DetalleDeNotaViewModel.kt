@@ -19,14 +19,15 @@ constructor(private val repositorio: RepositorioPrincipal) : ViewModel() {
     // aqui se almacena el color seleccionado para el fondo de la nota
     private val _colorSeleccionado = MutableStateFlow(R.color.blanco)
     val colorSeleccionado: StateFlow<Int> get() = _colorSeleccionado
+
     // aqui se almacena el objeto nota
     private val _nota = MutableStateFlow<Nota?>(null)
     val nota: StateFlow<Nota?> get() = _nota
 
     // establece el valor de la nota dada el id que se
     // especifica en la ListaDeNotasFragment al hacer click
-    fun setNotaPorId(id: String){
-        repositorio.getNotaPorId(id).onEach{
+    fun setNotaPorId(id: String) {
+        repositorio.getNotaPorId(id).onEach {
             _nota.value = it
         }.launchIn(viewModelScope)
     }
@@ -45,7 +46,14 @@ constructor(private val repositorio: RepositorioPrincipal) : ViewModel() {
     }
 
     private fun guardarCambios(titulo: String, contenido: String) {
-        // TODO:
+        repositorio.actualizarNota(
+            _nota.value!!.copy(
+                titulo = titulo,
+                contenido = contenido,
+                color = _colorSeleccionado.value,
+                modificacion = System.currentTimeMillis()
+            )
+        ).launchIn(viewModelScope)
     }
 
     private fun guardarNuevaNota(titulo: String, contenido: String) {
