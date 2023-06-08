@@ -9,6 +9,14 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import gamaerry.notas.modelo.Nota
 
+// ocultarTeclado() se usa a la hora de presionar "buscar" en el fragmento principal
+fun View.ocultarTeclado() {
+    val manejadorDelInputMethod =
+        context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    manejadorDelInputMethod.hideSoftInputFromWindow(windowToken, 0)
+    this.clearFocus()
+}
+
 // mostrarTeclado() se usa cuando el usuario abre una nota (ya sea para modificar o para crear)
 fun View.mostrarTeclado() {
     this.requestFocus()
