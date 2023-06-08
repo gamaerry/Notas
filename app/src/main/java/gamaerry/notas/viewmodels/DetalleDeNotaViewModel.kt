@@ -69,4 +69,8 @@ constructor(private val repositorio: RepositorioPrincipal) : ViewModel() {
             )
         ).launchIn(viewModelScope)
     }
+
+    fun borrarNota() {
+        _nota.value?.let { repositorio.borrarNota(it).launchIn(viewModelScope) }
+    }
 }
