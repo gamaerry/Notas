@@ -35,4 +35,8 @@ constructor(private val daoPrincipal: DaoPrincipal) {
     fun getNotaPorId(id: String) = flow {
         emit(daoPrincipal.operacionGetNotaPorId(id))
     }.catch { it.printStackTrace() }
+    
+    fun actualizarNota(nota: Nota) = flow {
+        emit(daoPrincipal.operacionActualizarNota(nota))
+    }.catch { it.printStackTrace() }
 }
