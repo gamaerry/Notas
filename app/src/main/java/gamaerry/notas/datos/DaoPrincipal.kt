@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import gamaerry.notas.modelo.Nota
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -23,4 +24,7 @@ interface DaoPrincipal {
     // busca y regresa la nota con el id especificado
     @Query("SELECT * FROM Nota WHERE id = :id")
     suspend fun operacionGetNotaPorId(id: String): Nota?
+
+    @Update
+    suspend fun operacionActualizarNota(nota: Nota)
 }
