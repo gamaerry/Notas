@@ -28,6 +28,7 @@ constructor(private val repositorio: RepositorioPrincipal) : ViewModel() {
     // especifica en la ListaDeNotasFragment al hacer click
     fun setNotaPorId(id: String) {
         repositorio.getNotaPorId(id).onEach {
+            if (it == null) setColor(R.color.blanco)
             _nota.value = it
         }.launchIn(viewModelScope)
     }

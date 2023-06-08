@@ -33,7 +33,10 @@ constructor(private val daoPrincipal: DaoPrincipal) {
 
     // emite el objeto Nota obtenido por el Dao dada su id
     fun getNotaPorId(id: String) = flow {
-        emit(daoPrincipal.operacionGetNotaPorId(id))
+        if (id == "")
+            emit(null)
+        else
+            emit(daoPrincipal.operacionGetNotaPorId(id))
     }.catch { it.printStackTrace() }
     
     fun actualizarNota(nota: Nota) = flow {
