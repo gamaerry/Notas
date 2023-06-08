@@ -4,8 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
+import android.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -17,6 +18,7 @@ import gamaerry.notas.R
 import gamaerry.notas.adaptadores.ListaDeNotasAdapter
 import gamaerry.notas.cambiarColorDelStatusBar
 import gamaerry.notas.databinding.FragmentListaDeNotasBinding
+import gamaerry.notas.ocultarTeclado
 import gamaerry.notas.viewmodels.DetalleDeNotaViewModel
 import gamaerry.notas.viewmodels.ListaDeNotasViewModel
 import kotlinx.coroutines.launch
@@ -67,6 +69,24 @@ class ListaDeNotasFragment : Fragment() {
             addToBackStack("detalleNota")
         }
 
+        binding.buscador.setOnQueryTextListener(object: OnQueryTextListener,
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return if (query != null){
+                    buscarEnBaseDeDatos(query)
+                    binding.buscador.ocultarTeclado()
+                    true
+                } else false
+            }
+
+            override fun onQueryTextChange(query: String?): Boolean {
+                return if (query != null){
+                    buscarEnBaseDeDatos(query)
+                    true
+                } else false
+            }
+        })
+
         // establecer accion para el boton de nueva nota
         binding.nuevaNota.setOnClickListener {
             // esto dara un objeto Nota nulo
@@ -91,6 +111,10 @@ class ListaDeNotasFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = listaDeNotasAdapter
         }
+    }
+
+    private fun buscarEnBaseDeDatos(query: String) {
+        listaDeNotasViewModel.setBusquedaQuery(query)
     }
 
     // se sobreescriben estos metodos unicamente para
