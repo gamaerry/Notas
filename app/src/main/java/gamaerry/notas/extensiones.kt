@@ -16,10 +16,13 @@ val Activity.myPrefs: SharedPreferences
 
 fun Activity.getEsPrimeraVez(): Boolean {
     val esPrimeraVez = myPrefs.getBoolean("esPrimeraVez", true)
-    return if (esPrimeraVez) {
-        myPrefs.edit().putBoolean("esPrimeraVez", false).apply()
-        true
-    } else false
+    myPrefs.edit().putBoolean("esPrimeraVez", false).apply()
+    return esPrimeraVez
+    // nota tecnica: a pesar de que a esPrimeraVez se le
+    // asigna un objeto Boolean esta no se actualiza cuando dicho
+    // objeto se actualiza, es decir a pesar de que Boolean
+    // tecnicamente no es un tipo primitivo en kotlin asi es
+    // manejado internamente, justo como los primitivos en java
 }
 
 fun Activity.alternarEsLineal() {
