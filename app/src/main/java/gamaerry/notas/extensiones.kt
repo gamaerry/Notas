@@ -10,15 +10,24 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import gamaerry.notas.modelo.Nota
 
-fun Activity.getEsPrimeraVez(): Boolean{
-    val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-    val esPrimeraVez = sharedPreferences.getBoolean("esPrimeraVez", true)
+fun Activity.getEsPrimeraVez(): Boolean {
+    val myPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+    val esPrimeraVez = myPrefs.getBoolean("esPrimeraVez", true)
     return if (esPrimeraVez) {
-        val editor = sharedPreferences.edit()
-        editor.putBoolean("esPrimeraVez", false)
-        editor.apply()
+        myPrefs.edit().putBoolean("esPrimeraVez", false).apply()
         true
     } else false
+}
+
+fun Activity.alternarEsLineal() {
+    val myPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+    val esLineal = myPrefs.getBoolean("eslineal", true)
+    myPrefs.edit().putBoolean("esLineal", !esLineal).apply()
+}
+
+fun Activity.getEsLineal(): Boolean {
+    return getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        .getBoolean("eslineal", true)
 }
 
 // ocultarTeclado() se usa a la hora de presionar "buscar" en el fragmento principal
