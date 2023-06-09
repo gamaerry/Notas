@@ -18,6 +18,8 @@ constructor(private val repositorio: RepositorioPrincipal) : ViewModel() {
     // aqui es donde se almacena la listaDeNotas
     private var _listaDeNotas = MutableStateFlow<List<Nota>>(emptyList())
     val listaDeNotas: StateFlow<List<Nota>> get() = _listaDeNotas
+    private var _esLineal = MutableStateFlow<Boolean>(true)
+    val esLineal: StateFlow<Boolean> get() = _esLineal
 
     // representa el filtrado de busqueda
     private val busquedaQuery = MutableStateFlow("")
@@ -31,5 +33,9 @@ constructor(private val repositorio: RepositorioPrincipal) : ViewModel() {
         busquedaQuery.value = query
         getNotas()
         return true
+    }
+
+    fun setEsLineal(esLineal: Boolean){
+        _esLineal.value = esLineal
     }
 }

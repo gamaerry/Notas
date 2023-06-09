@@ -5,7 +5,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.SearchView.OnQueryTextListener
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -13,16 +15,20 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import gamaerry.notas.R
 import gamaerry.notas.adaptadores.ListaDeNotasAdapter
 import gamaerry.notas.cambiarColorDelStatusBar
 import gamaerry.notas.databinding.FragmentListaDeNotasBinding
+import gamaerry.notas.getEsLineal
 import gamaerry.notas.getEsPrimeraVez
 import gamaerry.notas.getNotaEstatica
 import gamaerry.notas.ocultarTeclado
 import gamaerry.notas.viewmodels.DetalleDeNotaViewModel
 import gamaerry.notas.viewmodels.ListaDeNotasViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -74,14 +80,15 @@ class ListaDeNotasFragment : Fragment() {
             addToBackStack("detalleNota")
         }
 
-        binding.buscador.setOnQueryTextListener(object: OnQueryTextListener,
+        binding.buscador.setOnQueryTextListener(object : OnQueryTextListener,
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                return if (query != null){
+                return if (query != null) {
                     binding.buscador.ocultarTeclado()
                     listaDeNotasViewModel.setBusquedaQuery(query)
                 } else false
             }
+
             override fun onQueryTextChange(query: String?): Boolean {
                 return if (query != null)
                     listaDeNotasViewModel.setBusquedaQuery(query)
@@ -104,16 +111,39 @@ class ListaDeNotasFragment : Fragment() {
             transicion.commit()
         }
 
+        binding.imageView.setOnClickListener {
+            listaDeNotasViewModel.setEsLineal(requireActivity().getEsLineal())
+        }
+
+        // enlazar el listAdapter al recyclerView
+        binding.listaRecyclerView.adapter = listaDeNotasAdapter
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                listaDeNotasViewModel.esLineal.collect {
+                    if (it) {
+                        binding.listaRecyclerView.layoutManager =
+                            LinearLayoutManager(requireContext())
+                        binding.imageView.setImageDrawable(
+                            ContextCompat.getDrawable(requireContext(), R.drawable.ic_cuadricula)
+                        )
+                    } else {
+                        binding.listaRecyclerView.layoutManager =
+                            StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+                        binding.imageView.setImageDrawable(
+                            ContextCompat.getDrawable(requireContext(), R.drawable.ic_lista)
+                        )
+                    }
+                }
+            }
+        }
+
+
         // pasar las notas del viewModel al listAdapter
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 listaDeNotasViewModel.listaDeNotas.collect { listaDeNotasAdapter.submitList(it) }
             }
-        }
-        // enlazar el listAdapter al recyclerView
-        binding.listaRecyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = listaDeNotasAdapter
         }
     }
 
