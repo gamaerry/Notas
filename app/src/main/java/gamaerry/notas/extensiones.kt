@@ -3,6 +3,7 @@ package gamaerry.notas
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -26,7 +27,7 @@ fun Activity.getEsPrimeraVez(): Boolean {
 }
 
 fun Activity.getEsLineal(): Boolean {
-    val esLineal = myPrefs.getBoolean("eslineal", true)
+    val esLineal = myPrefs.getBoolean("esLineal", true)
     myPrefs.edit().putBoolean("esLineal", !esLineal).apply()
     return !esLineal
 }
