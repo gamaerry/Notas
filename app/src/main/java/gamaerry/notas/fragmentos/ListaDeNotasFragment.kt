@@ -22,9 +22,11 @@ import gamaerry.notas.R
 import gamaerry.notas.adaptadores.ListaDeNotasAdapter
 import gamaerry.notas.cambiarColorDelStatusBar
 import gamaerry.notas.databinding.FragmentListaDeNotasBinding
+import gamaerry.notas.esLineal
 import gamaerry.notas.getEsLineal
 import gamaerry.notas.getEsPrimeraVez
 import gamaerry.notas.getNotaEstatica
+import gamaerry.notas.myPrefs
 import gamaerry.notas.ocultarTeclado
 import gamaerry.notas.viewmodels.DetalleDeNotaViewModel
 import gamaerry.notas.viewmodels.ListaDeNotasViewModel
@@ -55,6 +57,7 @@ class ListaDeNotasFragment : Fragment() {
         // actualizar color y notas (obtenidas estas por el viewModel)
         requireActivity().window.cambiarColorDelStatusBar(R.color.principal)
         listaDeNotasViewModel.getNotas()
+        listaDeNotasViewModel.setEsLineal(requireActivity().esLineal())
 
         // esta transicion se hace independientemente si
         // se trata de una nueva nota o una ya existente

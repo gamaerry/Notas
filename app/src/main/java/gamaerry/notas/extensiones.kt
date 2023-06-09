@@ -27,10 +27,12 @@ fun Activity.getEsPrimeraVez(): Boolean {
 }
 
 fun Activity.getEsLineal(): Boolean {
-    val esLineal = myPrefs.getBoolean("esLineal", true)
+    val esLineal = esLineal()
     myPrefs.edit().putBoolean("esLineal", !esLineal).apply()
     return !esLineal
 }
+
+fun Activity.esLineal() = myPrefs.getBoolean("esLineal", true)
 
 // ocultarTeclado() se usa a la hora de presionar "buscar" en el fragmento principal
 fun View.ocultarTeclado() {
