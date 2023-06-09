@@ -25,13 +25,10 @@ fun Activity.getEsPrimeraVez(): Boolean {
     // manejado internamente, justo como los primitivos en java
 }
 
-fun Activity.alternarEsLineal() {
+fun Activity.getEsLineal(): Boolean {
     val esLineal = myPrefs.getBoolean("eslineal", true)
     myPrefs.edit().putBoolean("esLineal", !esLineal).apply()
-}
-
-fun Activity.getEsLineal(): Boolean {
-    return myPrefs.getBoolean("eslineal", true)
+    return !esLineal
 }
 
 // ocultarTeclado() se usa a la hora de presionar "buscar" en el fragmento principal
