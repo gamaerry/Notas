@@ -2,6 +2,7 @@ package gamaerry.notas
 
 import android.app.Activity
 import android.content.Context
+import android.content.SharedPreferences
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -10,8 +11,10 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import gamaerry.notas.modelo.Nota
 
+val Activity.myPrefs: SharedPreferences
+    get() = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+
 fun Activity.getEsPrimeraVez(): Boolean {
-    val myPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
     val esPrimeraVez = myPrefs.getBoolean("esPrimeraVez", true)
     return if (esPrimeraVez) {
         myPrefs.edit().putBoolean("esPrimeraVez", false).apply()
@@ -20,14 +23,12 @@ fun Activity.getEsPrimeraVez(): Boolean {
 }
 
 fun Activity.alternarEsLineal() {
-    val myPrefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
     val esLineal = myPrefs.getBoolean("eslineal", true)
     myPrefs.edit().putBoolean("esLineal", !esLineal).apply()
 }
 
 fun Activity.getEsLineal(): Boolean {
-    return getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-        .getBoolean("eslineal", true)
+    return myPrefs.getBoolean("eslineal", true)
 }
 
 // ocultarTeclado() se usa a la hora de presionar "buscar" en el fragmento principal
