@@ -4,7 +4,7 @@
     android:id="@+id/contenedorItemNota"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/margen_grande"
+    android:layout_marginHorizontal="@dimen/margen_chico"
     android:layout_marginVertical="@dimen/margen_chico"
     android:background="@drawable/fondo_notas"
     android:padding="@dimen/margen_mediano">
