@@ -21,7 +21,7 @@ class ListaDeNotasAdapter
 constructor() : ListAdapter<Nota, ListaDeNotasAdapter.ItemNotaViewHolder>(NotaDiffUtil) {
     // definira que pasara con el cada item a la hora de hacer click,
     // lo usara el viewHolder pero quien tiene que recibirlo es el adapter
-    lateinit var accionAlHacerClic: ((String) -> Unit)
+    lateinit var accionAlHacerClic: (String) -> Unit
 
     // junto con onBindViewHolder, hacen posible la interacción adapter/viewHolder
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemNotaViewHolder =
@@ -72,7 +72,6 @@ constructor() : ListAdapter<Nota, ListaDeNotasAdapter.ItemNotaViewHolder>(NotaDi
             contenido.text = nota.contenido
         }
     }
-
 
     // un objeto necesario para el listAdapter al parecer su funcion es hacer
     // posible la distincion entre tener el mismo contenido o ser el mismo objeto

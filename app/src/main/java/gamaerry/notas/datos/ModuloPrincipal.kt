@@ -17,12 +17,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ModuloPrincipal {
-    // Para la instancia de SelectorDeColorAdapter se necesita la lista de colores a usar
+    // para la instancia de SelectorDeColorAdapter se necesita la lista de colores a usar
     @Provides
     @Singleton
     fun proveerSelectorDeColorAdapter() = SelectorDeColorAdapter(getColores())
 
-    // La instancia de base de datos se crea exclusivamente
+    // la instancia de base de datos se crea exclusivamente
     // con una funcion propia de la librería de Room
     @Provides
     @Singleton
@@ -31,7 +31,7 @@ object ModuloPrincipal {
         .fallbackToDestructiveMigration()
         .build()
 
-    // La instancia del dao se crea a partir de la base de datos ya proveida
+    // la instancia del dao se crea a partir de la base de datos ya proveida
     @Provides
     @Singleton
     fun proveerDaoPrincipal(baseDeDatos: BaseDeDatosPrincipal) = baseDeDatos.getNotaDao()

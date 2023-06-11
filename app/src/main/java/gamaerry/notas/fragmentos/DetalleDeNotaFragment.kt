@@ -1,7 +1,6 @@
 package gamaerry.notas.fragmentos
 
 import android.os.Bundle
-import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,12 +15,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import gamaerry.notas.cambiarColorDelBackground
 import gamaerry.notas.cambiarColorDelStatusBar
 import gamaerry.notas.databinding.FragmentDetalleDeNotaBinding
+import gamaerry.notas.getFechaDeModificacion
+import gamaerry.notas.modelo.Nota
 import gamaerry.notas.mostrarTeclado
 import gamaerry.notas.viewmodels.ViewModelPrincipal
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 @AndroidEntryPoint
 class DetalleDeNotaFragment : Fragment() {
@@ -32,6 +30,19 @@ class DetalleDeNotaFragment : Fragment() {
     // con by activityViewModels() uso la implementacion que me
     // permite usar este objeto dentro del alcance de la actividad
     private val viewModelPrincipal: ViewModelPrincipal by activityViewModels()
+
+    // notese que con el elvis operator nos aseguramos de que si la nota es nula nada
+    // de esto se ejecutaria, y asi se evitarian errores relacionados con los nulos
+    // (es decir, esto se ejecuta unicamente suando se abre una nota existente)
+    private val accionAlCambiarNotaActual: (Nota?) -> Unit = {
+        it?.let { nota ->
+            binding.tituloNota.setText(nota.titulo)
+            binding.contenidoNota.setText(nota.contenido)
+            viewModelPrincipal.setColor(nota.color)
+            binding.eliminar.isVisible = true
+            binding.fechaDeEditado.text = nota.modificacion.getFechaDeModificacion()
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,6 +56,7 @@ class DetalleDeNotaFragment : Fragment() {
         }
 
         binding.eliminar.setOnClickListener {
+            //borra la nota de la base de datos con ayuda del repositorio
             viewModelPrincipal.borrarNota()
             //regresa al fragmento anterior
             requireActivity().supportFragmentManager.popBackStack()
@@ -61,23 +73,10 @@ class DetalleDeNotaFragment : Fragment() {
             }
         }
 
+        // establece la accion a realizar al cambiar el valor de la notaActual del viewModel
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModelPrincipal.nota.collect {
-                    it?.let { nota ->
-                        binding.tituloNota.setText(nota.titulo)
-                        binding.contenidoNota.setText(nota.contenido)
-                        viewModelPrincipal.setColor(nota.color)
-                        binding.eliminar.isVisible = true
-                        val dateFormat: SimpleDateFormat =
-                            if (DateUtils.isToday(Date(nota.modificacion).time))
-                                SimpleDateFormat("hh:mm a", Locale.ROOT)
-                            else
-                                SimpleDateFormat("MMM dd", Locale.ROOT)
-                        val fechaDeEditado = "Editado ${dateFormat.format(Date(nota.modificacion))}"
-                        binding.fechaDeEditado.text = fechaDeEditado
-                    }
-                }
+                viewModelPrincipal.notaActual.collect { accionAlCambiarNotaActual }
             }
         }
 
@@ -90,8 +89,8 @@ class DetalleDeNotaFragment : Fragment() {
     }
 
     private fun retroceder() {
-        // esta funcion no requiere del color porque el SelectorDeColorFragment
-        // es quien se encarga de almacenar el color seleccionado por el usuario
+        // esta funcion no requiere pasar el color porque internamente
+        // se toma del StateFlow colorSeleccionado del viewModel
         viewModelPrincipal.guardarNota(
             binding.tituloNota.text.toString(),
             binding.contenidoNota.text.toString()

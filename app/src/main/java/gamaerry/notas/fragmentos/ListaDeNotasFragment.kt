@@ -4,9 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView.OnQueryTextListener
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -18,8 +19,8 @@ import gamaerry.notas.R
 import gamaerry.notas.adaptadores.ListaDeNotasAdapter
 import gamaerry.notas.cambiarColorDelStatusBar
 import gamaerry.notas.databinding.FragmentListaDeNotasBinding
-import gamaerry.notas.esLineal
 import gamaerry.notas.getEsLineal
+import gamaerry.notas.toggleEsLineal
 import gamaerry.notas.getEsPrimeraVez
 import gamaerry.notas.getNotaEstatica
 import gamaerry.notas.ocultarTeclado
@@ -41,19 +42,104 @@ class ListaDeNotasFragment : Fragment() {
     @Inject
     lateinit var listaDeNotasAdapter: ListaDeNotasAdapter
 
+    // no puede ser un lambda porque implementa dos metodos en lugar de uno
+    private val accionAlBuscar = object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
+        // esta funcion se llama cuando se presiona el
+        // icono de buscar en el SearchView o en el teclado
+        override fun onQueryTextSubmit(query: String?): Boolean {
+            return if (query != null) {
+                binding.buscador.ocultarTeclado()
+                viewModelPrincipal.setPalabrasClave(query)
+            } else false
+        }
+
+        // y esta se llama cuando cambia el texto introducido
+        // (notese que en ambas funciones setBusquedaQuery()
+        // regresa un true indicando su correcto funcionamiento)
+        override fun onQueryTextChange(query: String?): Boolean {
+            return if (query != null)
+                viewModelPrincipal.setPalabrasClave(query)
+            else false
+        }
+    }
+
+    // aqui es donde se cambia el icono y la manera de organizar el recyclerView
+    private val accionAlCambiarEsLineal: (Boolean) -> Unit = {
+        if (it) {
+            binding.listaRecyclerView.layoutManager =
+                LinearLayoutManager(requireContext())
+            binding.imageView.setImageDrawable(
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_cuadricula)
+            )
+        } else {
+            binding.listaRecyclerView.layoutManager =
+                StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+            binding.imageView.setImageDrawable(
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_lista)
+            )
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // si es la primera vez que se inicia, la app da la bienvenida al usuario
         if (requireActivity().getEsPrimeraVez())
             viewModelPrincipal.insertarNota(getNotaEstatica())
 
-        super.onViewCreated(view, savedInstanceState)
-        // actualizar color y notas (obtenidas estas por el viewModel)
+        // actualizar color (del xml), las notas (en la base de datos)
+        // y se estan ordenadas lineamente (en myPrefs del activity)
         requireActivity().window.cambiarColorDelStatusBar(R.color.principal)
         viewModelPrincipal.getNotas()
-        viewModelPrincipal.setEsLineal(requireActivity().esLineal())
+        viewModelPrincipal.setEsLineal(requireActivity().getEsLineal())
 
-        // esta transicion se hace independientemente si
-        // se trata de una nueva nota o una ya existente
-        val transicion = requireActivity().supportFragmentManager.beginTransaction().apply {
+        // se establece el listener que
+        binding.buscador.setOnQueryTextListener(accionAlBuscar)
+
+        // establecer accion para el boton de nueva nota
+        binding.nuevaNota.setOnClickListener {
+            // esto dara un objeto Nota nulo
+            // (notese que es set y no get por
+            // tratarse del viewModelPrincipal)
+            viewModelPrincipal.setNotaActualPorId("")
+            getTransicion(requireActivity()).commit()
+        }
+
+        // hace la misma transicion pero con la nota seleccionada
+        listaDeNotasAdapter.accionAlHacerClic = {
+            // esto dara el objeto Nota con el id
+            // obtenido del ItemNotaViewHolder
+            viewModelPrincipal.setNotaActualPorId(it)
+            getTransicion(requireActivity()).commit()
+        }
+
+        // obtiene y cambia el valor booleano esLineal
+        binding.imageView.setOnClickListener {
+            viewModelPrincipal.setEsLineal(requireActivity().toggleEsLineal())
+        }
+
+        // enlazar el listAdapter al recyclerView
+        binding.listaRecyclerView.adapter = listaDeNotasAdapter
+
+        // establece la accion al cambiar esLineal
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModelPrincipal.esLineal.collect { accionAlCambiarEsLineal(it) }
+            }
+        }
+
+        // pasar las notas del viewModel al listAdapter
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModelPrincipal.listaDeNotas.collect { listaDeNotasAdapter.submitList(it) }
+            }
+        }
+    }
+
+
+    // esta transicion se hace independientemente si
+    // se trata de una nueva nota o una ya existente
+    private fun getTransicion(activity: FragmentActivity): FragmentTransaction{
+        return activity.supportFragmentManager.beginTransaction().apply {
             // establece las animaciones tanto para el
             // fragmento que va saliendo de escena,
             // como para el que va entrando
@@ -73,72 +159,6 @@ class ListaDeNotasFragment : Fragment() {
             // en el dispositivo, me regrese (cree de nuevo) a mi
             // fragmento anterior (ListaDeNotasFragment en este caso)
             addToBackStack("detalleNota")
-        }
-
-        binding.buscador.setOnQueryTextListener(object : OnQueryTextListener,
-            androidx.appcompat.widget.SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return if (query != null) {
-                    binding.buscador.ocultarTeclado()
-                    viewModelPrincipal.setBusquedaQuery(query)
-                } else false
-            }
-
-            override fun onQueryTextChange(query: String?): Boolean {
-                return if (query != null)
-                    viewModelPrincipal.setBusquedaQuery(query)
-                else false
-            }
-        })
-
-        // establecer accion para el boton de nueva nota
-        binding.nuevaNota.setOnClickListener {
-            // esto dara un objeto Nota nulo
-            // (notese que es set y no get por
-            // tratarse del detalleDeNotaViewModel)
-            viewModelPrincipal.setNotaPorId("")
-            transicion.commit()
-        }
-
-        // hace la misma transicion pero con la nota seleccionada
-        listaDeNotasAdapter.accionAlHacerClic = {
-            viewModelPrincipal.setNotaPorId(it)
-            transicion.commit()
-        }
-
-        binding.imageView.setOnClickListener {
-            viewModelPrincipal.setEsLineal(requireActivity().getEsLineal())
-        }
-
-        // enlazar el listAdapter al recyclerView
-        binding.listaRecyclerView.adapter = listaDeNotasAdapter
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModelPrincipal.esLineal.collect {
-                    if (it) {
-                        binding.listaRecyclerView.layoutManager =
-                            LinearLayoutManager(requireContext())
-                        binding.imageView.setImageDrawable(
-                            ContextCompat.getDrawable(requireContext(), R.drawable.ic_cuadricula)
-                        )
-                    } else {
-                        binding.listaRecyclerView.layoutManager =
-                            StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-                        binding.imageView.setImageDrawable(
-                            ContextCompat.getDrawable(requireContext(), R.drawable.ic_lista)
-                        )
-                    }
-                }
-            }
-        }
-
-
-        // pasar las notas del viewModel al listAdapter
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModelPrincipal.listaDeNotas.collect { listaDeNotasAdapter.submitList(it) }
-            }
         }
     }
 

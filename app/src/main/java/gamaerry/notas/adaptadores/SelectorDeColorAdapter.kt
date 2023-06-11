@@ -33,7 +33,6 @@ class SelectorDeColorAdapter(
 
     override fun getItemCount() = listaDeColores.size
 
-
     inner class ColorSelectorViewHolder(
         binding: ItemColorBinding
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -54,6 +53,5 @@ class SelectorDeColorAdapter(
             // el icono se muestra si el color de la nota es el blanco
             icono.isVisible = color == R.color.blanco
         }
-
     }
 }

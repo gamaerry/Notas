@@ -1,4 +1,5 @@
 package gamaerry.notas.fragmentos
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,7 +24,8 @@ class SelectorDeColorFragment : BottomSheetDialogFragment() {
     private val viewModelPrincipal: ViewModelPrincipal by activityViewModels()
 
     //gracias a la inyeccion de dependencias no tengo que usar el constructor
-    @Inject lateinit var selectorDeColorAdapter: SelectorDeColorAdapter
+    @Inject
+    lateinit var selectorDeColorAdapter: SelectorDeColorAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -42,7 +44,8 @@ class SelectorDeColorFragment : BottomSheetDialogFragment() {
 
         // enlazar el adapter al recyclerView
         binding.listaDeColores.apply {
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = selectorDeColorAdapter
         }
     }

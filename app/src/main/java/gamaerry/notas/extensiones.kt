@@ -3,7 +3,7 @@ package gamaerry.notas
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
+import android.text.format.DateUtils
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -11,10 +11,17 @@ import android.view.inputmethod.InputMethodManager
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import gamaerry.notas.modelo.Nota
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
+// se crea una "variable de extension" para tener
+// siempre una referencia al SharedPreferences principal
 val Activity.myPrefs: SharedPreferences
     get() = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
 
+// devuelve si es la primera vez que inicia la app.
+// Notese que una vez obtenida true siempre sera false
 fun Activity.getEsPrimeraVez(): Boolean {
     val esPrimeraVez = myPrefs.getBoolean("esPrimeraVez", true)
     myPrefs.edit().putBoolean("esPrimeraVez", false).apply()
@@ -26,13 +33,15 @@ fun Activity.getEsPrimeraVez(): Boolean {
     // manejado internamente, justo como los primitivos en java
 }
 
-fun Activity.getEsLineal(): Boolean {
-    val esLineal = esLineal()
+// ademas de cambiar al valor contrario lo devuelve
+fun Activity.toggleEsLineal(): Boolean {
+    val esLineal = getEsLineal()
     myPrefs.edit().putBoolean("esLineal", !esLineal).apply()
     return !esLineal
 }
 
-fun Activity.esLineal() = myPrefs.getBoolean("esLineal", true)
+// solo devuelte el valor booleano (a diferencia de toggleEsLineal())
+fun Activity.getEsLineal() = myPrefs.getBoolean("esLineal", true)
 
 // ocultarTeclado() se usa a la hora de presionar "buscar" en el fragmento principal
 fun View.ocultarTeclado() {
@@ -61,8 +70,19 @@ fun ConstraintLayout.cambiarColorDelBackground(color: Int) {
     this.setBackgroundColor(ContextCompat.getColor(context, color))
 }
 
-// nota estatica que se agrega a la lista de las notas de la base
-// de datos (probablemente borrada para la version de lanzamiento)
+// funcion de extension que dado el currentMillis de modificacion
+// obtiene su correspondiente string con el formato adecuado
+fun Long.getFechaDeModificacion(): String {
+    val fechaDeModificacion = Date(this)
+    val formatoEstablecido: SimpleDateFormat =
+        if (DateUtils.isToday(fechaDeModificacion.time))
+            SimpleDateFormat("hh:mm a", Locale.ROOT)
+        else
+            SimpleDateFormat("MMM dd", Locale.ROOT)
+    return "Editado ${formatoEstablecido.format(fechaDeModificacion)}"
+}
+
+// nota estatica que se agrega a la lista de las notas de la base de datos
 fun getNotaEstatica() = Nota(
     titulo = "Nota de bienvenida",
     contenido = "Bienvenido(a) a esta aplicación de notas totalmente add-free, ¡que la disfrutes! <3\n\nAtentamente, el desarrollador."
