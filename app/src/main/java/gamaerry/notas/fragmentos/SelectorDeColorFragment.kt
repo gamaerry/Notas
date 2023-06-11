@@ -9,7 +9,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import gamaerry.notas.adaptadores.SelectorDeColorAdapter
 import gamaerry.notas.databinding.FragmentSelectorDeColorBinding
-import gamaerry.notas.viewmodels.DetalleDeNotaViewModel
+import gamaerry.notas.viewmodels.ViewModelPrincipal
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -20,7 +20,7 @@ class SelectorDeColorFragment : BottomSheetDialogFragment() {
 
     // con by activityViewModels() uso la implementacion que me
     // permite usar este objeto dentro del alcance de la actividad
-    private val detalleDeNotaViewModel: DetalleDeNotaViewModel by activityViewModels()
+    private val viewModelPrincipal: ViewModelPrincipal by activityViewModels()
 
     //gracias a la inyeccion de dependencias no tengo que usar el constructor
     @Inject lateinit var selectorDeColorAdapter: SelectorDeColorAdapter
@@ -34,7 +34,7 @@ class SelectorDeColorFragment : BottomSheetDialogFragment() {
             // es aqui donde el viewModel del DetalleDeNotaFragment obtiene el color
             // requerido por el usuario, por ello era necesario que en ambos fragmentos
             // existiera una referencia al un viewModel con un alcance de activity
-            detalleDeNotaViewModel.setColor(it)
+            viewModelPrincipal.setColor(it)
 
             // desaparece el SelectorDeColorFragment
             this.dismiss()

@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
-class DetalleDeNotaViewModel
+class ViewModelPrincipal
 @Inject
 constructor(private val repositorio: RepositorioPrincipal) : ViewModel() {
     // aqui es donde se almacena la listaDeNotas

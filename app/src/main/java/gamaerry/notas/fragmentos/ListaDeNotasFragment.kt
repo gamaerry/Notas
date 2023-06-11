@@ -23,7 +23,7 @@ import gamaerry.notas.getEsLineal
 import gamaerry.notas.getEsPrimeraVez
 import gamaerry.notas.getNotaEstatica
 import gamaerry.notas.ocultarTeclado
-import gamaerry.notas.viewmodels.DetalleDeNotaViewModel
+import gamaerry.notas.viewmodels.ViewModelPrincipal
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,7 +35,7 @@ class ListaDeNotasFragment : Fragment() {
 
     // con by viewModels() uso la implementacion que me permite usar
     // este objeto exclusivamente dentro del alcance de este fragment
-    private val detalleDeNotaViewModel: DetalleDeNotaViewModel by activityViewModels()
+    private val viewModelPrincipal: ViewModelPrincipal by activityViewModels()
 
     // gracias a la inyeccion de dependencias no tengo que usar el constructor
     @Inject
@@ -43,13 +43,13 @@ class ListaDeNotasFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         if (requireActivity().getEsPrimeraVez())
-            detalleDeNotaViewModel.insertarNota(getNotaEstatica())
+            viewModelPrincipal.insertarNota(getNotaEstatica())
 
         super.onViewCreated(view, savedInstanceState)
         // actualizar color y notas (obtenidas estas por el viewModel)
         requireActivity().window.cambiarColorDelStatusBar(R.color.principal)
-        detalleDeNotaViewModel.getNotas()
-        detalleDeNotaViewModel.setEsLineal(requireActivity().esLineal())
+        viewModelPrincipal.getNotas()
+        viewModelPrincipal.setEsLineal(requireActivity().esLineal())
 
         // esta transicion se hace independientemente si
         // se trata de una nueva nota o una ya existente
@@ -80,13 +80,13 @@ class ListaDeNotasFragment : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return if (query != null) {
                     binding.buscador.ocultarTeclado()
-                    detalleDeNotaViewModel.setBusquedaQuery(query)
+                    viewModelPrincipal.setBusquedaQuery(query)
                 } else false
             }
 
             override fun onQueryTextChange(query: String?): Boolean {
                 return if (query != null)
-                    detalleDeNotaViewModel.setBusquedaQuery(query)
+                    viewModelPrincipal.setBusquedaQuery(query)
                 else false
             }
         })
@@ -96,18 +96,18 @@ class ListaDeNotasFragment : Fragment() {
             // esto dara un objeto Nota nulo
             // (notese que es set y no get por
             // tratarse del detalleDeNotaViewModel)
-            detalleDeNotaViewModel.setNotaPorId("")
+            viewModelPrincipal.setNotaPorId("")
             transicion.commit()
         }
 
         // hace la misma transicion pero con la nota seleccionada
         listaDeNotasAdapter.accionAlHacerClic = {
-            detalleDeNotaViewModel.setNotaPorId(it)
+            viewModelPrincipal.setNotaPorId(it)
             transicion.commit()
         }
 
         binding.imageView.setOnClickListener {
-            detalleDeNotaViewModel.setEsLineal(requireActivity().getEsLineal())
+            viewModelPrincipal.setEsLineal(requireActivity().getEsLineal())
         }
 
         // enlazar el listAdapter al recyclerView
@@ -115,7 +115,7 @@ class ListaDeNotasFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                detalleDeNotaViewModel.esLineal.collect {
+                viewModelPrincipal.esLineal.collect {
                     if (it) {
                         binding.listaRecyclerView.layoutManager =
                             LinearLayoutManager(requireContext())
@@ -137,7 +137,7 @@ class ListaDeNotasFragment : Fragment() {
         // pasar las notas del viewModel al listAdapter
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                detalleDeNotaViewModel.listaDeNotas.collect { listaDeNotasAdapter.submitList(it) }
+                viewModelPrincipal.listaDeNotas.collect { listaDeNotasAdapter.submitList(it) }
             }
         }
     }

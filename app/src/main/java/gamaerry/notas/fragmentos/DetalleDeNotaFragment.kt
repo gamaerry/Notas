@@ -17,7 +17,7 @@ import gamaerry.notas.cambiarColorDelBackground
 import gamaerry.notas.cambiarColorDelStatusBar
 import gamaerry.notas.databinding.FragmentDetalleDeNotaBinding
 import gamaerry.notas.mostrarTeclado
-import gamaerry.notas.viewmodels.DetalleDeNotaViewModel
+import gamaerry.notas.viewmodels.ViewModelPrincipal
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -31,7 +31,7 @@ class DetalleDeNotaFragment : Fragment() {
 
     // con by activityViewModels() uso la implementacion que me
     // permite usar este objeto dentro del alcance de la actividad
-    private val detalleDeNotaViewModel: DetalleDeNotaViewModel by activityViewModels()
+    private val viewModelPrincipal: ViewModelPrincipal by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,7 +45,7 @@ class DetalleDeNotaFragment : Fragment() {
         }
 
         binding.eliminar.setOnClickListener {
-            detalleDeNotaViewModel.borrarNota()
+            viewModelPrincipal.borrarNota()
             //regresa al fragmento anterior
             requireActivity().supportFragmentManager.popBackStack()
         }
@@ -54,7 +54,7 @@ class DetalleDeNotaFragment : Fragment() {
         // del StatusBar y del Background (color almacenado en el viewModel)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                detalleDeNotaViewModel.colorSeleccionado.collect {
+                viewModelPrincipal.colorSeleccionado.collect {
                     binding.parentDetalleDeNota.cambiarColorDelBackground(it)
                     requireActivity().window.cambiarColorDelStatusBar(it)
                 }
@@ -63,11 +63,11 @@ class DetalleDeNotaFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                detalleDeNotaViewModel.nota.collect {
+                viewModelPrincipal.nota.collect {
                     it?.let { nota ->
                         binding.tituloNota.setText(nota.titulo)
                         binding.contenidoNota.setText(nota.contenido)
-                        detalleDeNotaViewModel.setColor(nota.color)
+                        viewModelPrincipal.setColor(nota.color)
                         binding.eliminar.isVisible = true
                         val dateFormat: SimpleDateFormat =
                             if (DateUtils.isToday(Date(nota.modificacion).time))
@@ -92,7 +92,7 @@ class DetalleDeNotaFragment : Fragment() {
     private fun retroceder() {
         // esta funcion no requiere del color porque el SelectorDeColorFragment
         // es quien se encarga de almacenar el color seleccionado por el usuario
-        detalleDeNotaViewModel.guardarNota(
+        viewModelPrincipal.guardarNota(
             binding.tituloNota.text.toString(),
             binding.contenidoNota.text.toString()
         )
