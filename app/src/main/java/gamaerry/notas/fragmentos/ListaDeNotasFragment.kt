@@ -1,21 +1,17 @@
 package gamaerry.notas.fragmentos
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.SearchView.OnQueryTextListener
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import gamaerry.notas.R
@@ -26,11 +22,8 @@ import gamaerry.notas.esLineal
 import gamaerry.notas.getEsLineal
 import gamaerry.notas.getEsPrimeraVez
 import gamaerry.notas.getNotaEstatica
-import gamaerry.notas.myPrefs
 import gamaerry.notas.ocultarTeclado
 import gamaerry.notas.viewmodels.DetalleDeNotaViewModel
-import gamaerry.notas.viewmodels.ListaDeNotasViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -42,7 +35,6 @@ class ListaDeNotasFragment : Fragment() {
 
     // con by viewModels() uso la implementacion que me permite usar
     // este objeto exclusivamente dentro del alcance de este fragment
-    private val listaDeNotasViewModel: ListaDeNotasViewModel by viewModels()
     private val detalleDeNotaViewModel: DetalleDeNotaViewModel by activityViewModels()
 
     // gracias a la inyeccion de dependencias no tengo que usar el constructor
@@ -56,8 +48,8 @@ class ListaDeNotasFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         // actualizar color y notas (obtenidas estas por el viewModel)
         requireActivity().window.cambiarColorDelStatusBar(R.color.principal)
-        listaDeNotasViewModel.getNotas()
-        listaDeNotasViewModel.setEsLineal(requireActivity().esLineal())
+        detalleDeNotaViewModel.getNotas()
+        detalleDeNotaViewModel.setEsLineal(requireActivity().esLineal())
 
         // esta transicion se hace independientemente si
         // se trata de una nueva nota o una ya existente
@@ -88,13 +80,13 @@ class ListaDeNotasFragment : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return if (query != null) {
                     binding.buscador.ocultarTeclado()
-                    listaDeNotasViewModel.setBusquedaQuery(query)
+                    detalleDeNotaViewModel.setBusquedaQuery(query)
                 } else false
             }
 
             override fun onQueryTextChange(query: String?): Boolean {
                 return if (query != null)
-                    listaDeNotasViewModel.setBusquedaQuery(query)
+                    detalleDeNotaViewModel.setBusquedaQuery(query)
                 else false
             }
         })
@@ -115,7 +107,7 @@ class ListaDeNotasFragment : Fragment() {
         }
 
         binding.imageView.setOnClickListener {
-            listaDeNotasViewModel.setEsLineal(requireActivity().getEsLineal())
+            detalleDeNotaViewModel.setEsLineal(requireActivity().getEsLineal())
         }
 
         // enlazar el listAdapter al recyclerView
@@ -123,7 +115,7 @@ class ListaDeNotasFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                listaDeNotasViewModel.esLineal.collect {
+                detalleDeNotaViewModel.esLineal.collect {
                     if (it) {
                         binding.listaRecyclerView.layoutManager =
                             LinearLayoutManager(requireContext())
@@ -145,7 +137,7 @@ class ListaDeNotasFragment : Fragment() {
         // pasar las notas del viewModel al listAdapter
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                listaDeNotasViewModel.listaDeNotas.collect { listaDeNotasAdapter.submitList(it) }
+                detalleDeNotaViewModel.listaDeNotas.collect { listaDeNotasAdapter.submitList(it) }
             }
         }
     }

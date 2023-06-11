@@ -16,6 +16,17 @@ import javax.inject.Inject
 class DetalleDeNotaViewModel
 @Inject
 constructor(private val repositorio: RepositorioPrincipal) : ViewModel() {
+    // aqui es donde se almacena la listaDeNotas
+    private var _listaDeNotas = MutableStateFlow<List<Nota>>(emptyList())
+    val listaDeNotas: StateFlow<List<Nota>> get() = _listaDeNotas
+
+    // guarda si es el acomodo de la lista lineal o no
+    private var _esLineal = MutableStateFlow(true)
+    val esLineal: StateFlow<Boolean> get() = _esLineal
+
+    // representa el filtrado de busqueda
+    private val busquedaQuery = MutableStateFlow("")
+
     // aqui se almacena el color seleccionado para el fondo de la nota
     private val _colorSeleccionado = MutableStateFlow(R.color.blanco)
     val colorSeleccionado: StateFlow<Int> get() = _colorSeleccionado
@@ -23,6 +34,21 @@ constructor(private val repositorio: RepositorioPrincipal) : ViewModel() {
     // aqui se almacena el objeto nota
     private val _nota = MutableStateFlow<Nota?>(null)
     val nota: StateFlow<Nota?> get() = _nota
+
+    // obtiene las notas del repositorio de acuerdo a la busqueda
+    fun getNotas() = repositorio.getListaDeNotas(busquedaQuery.value).onEach {
+        _listaDeNotas.value = it
+    }.launchIn(viewModelScope)
+
+    fun setBusquedaQuery(query: String): Boolean{
+        busquedaQuery.value = query
+        getNotas()
+        return true
+    }
+
+    fun setEsLineal(esLineal: Boolean){
+        _esLineal.value = esLineal
+    }
 
     // establece el valor de la nota dada el id que se
     // especifica en la ListaDeNotasFragment al hacer click
