@@ -92,7 +92,7 @@ class ListaDeNotasFragment : Fragment() {
         viewModelPrincipal.getNotas()
         viewModelPrincipal.setEsLineal(requireActivity().getEsLineal())
 
-        // se establece el listener que
+        // se establece el listener que actuara al hacer busqueda
         binding.buscador.setOnQueryTextListener(accionAlBuscar)
 
         // establecer accion para el boton de nueva nota

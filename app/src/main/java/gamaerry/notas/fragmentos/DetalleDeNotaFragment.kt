@@ -33,7 +33,7 @@ class DetalleDeNotaFragment : Fragment() {
 
     // notese que con el elvis operator nos aseguramos de que si la nota es nula nada
     // de esto se ejecutaria, y asi se evitarian errores relacionados con los nulos
-    // (es decir, esto se ejecuta unicamente suando se abre una nota existente)
+    // (es decir, esto se ejecuta unicamente cuando se abre una nota existente)
     private val accionAlCambiarNotaActual: (Nota?) -> Unit = {
         it?.let { nota ->
             binding.tituloNota.setText(nota.titulo)
@@ -76,7 +76,7 @@ class DetalleDeNotaFragment : Fragment() {
         // establece la accion a realizar al cambiar el valor de la notaActual del viewModel
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModelPrincipal.notaActual.collect { accionAlCambiarNotaActual }
+                viewModelPrincipal.notaActual.collect { accionAlCambiarNotaActual(it) }
             }
         }
 
